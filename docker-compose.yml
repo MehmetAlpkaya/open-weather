@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  app:
+    image: 'open-weather:latest'
+    build:
+      context: .
+    deploy:
+      mode: replicated
+      replicas: 3
+    ports:
+      - "9595-9597:8080"
+    environment:
+      - "API_KEY=${API_KEY}"
