@@ -7,6 +7,7 @@ import com.mehmet.Weather.dto.WeatherDto;
 import com.mehmet.Weather.dto.WeatherResponse;
 import com.mehmet.Weather.model.WeatherEntity;
 import com.mehmet.Weather.repository.WeatherRepository;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = {"weathers"})
 public class WeatherService {
     private final ObjectMapper objectMapper=new ObjectMapper();
     private final WeatherRepository weatherRepository;
