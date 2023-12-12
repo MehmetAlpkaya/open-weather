@@ -7,8 +7,13 @@ import com.mehmet.Weather.dto.WeatherDto;
 import com.mehmet.Weather.dto.WeatherResponse;
 import com.mehmet.Weather.model.WeatherEntity;
 import com.mehmet.Weather.repository.WeatherRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +33,7 @@ public class WeatherService {
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable(key = "#city")
     public WeatherDto getWeatherByCityName(String city)
     {
         Optional<WeatherEntity> weatherEntityOptional =weatherRepository.findFirstByRequestedCityNameOrderByUpdateTimeDesc(city);
@@ -52,6 +58,7 @@ public class WeatherService {
 
     }
 
+
     private WeatherEntity getWeatherFromWeatherStack(String city)
     {
         ResponseEntity<String> responseEntity= restTemplate.getForEntity(getApiUrl(city), String.class);
@@ -62,7 +69,13 @@ public class WeatherService {
             throw new RuntimeException(e);
         }
 
-    }private String getApiUrl(String city)
+    }
+    @CacheEvict(allEntries = true)
+    @PostConstruct
+    @Scheduled(fixedRate = 10000)
+    public void clearCatch()
+    {}
+    private String getApiUrl(String city)
     {
         return Constants.API_URL+Constants.ACCES_KEY+Constants.API_KEY+Constants.QUERY+city;
     }
