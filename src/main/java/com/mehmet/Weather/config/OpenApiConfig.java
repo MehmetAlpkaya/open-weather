@@ -16,7 +16,7 @@ public class OpenApiConfig
                         .version("1.0")
                         .description("""
                                 This is an api provides weather report
-                                for last 30 minutes based on city names
+                                for last 30 minutes based on city namess
                                 """
                         ));
     }
